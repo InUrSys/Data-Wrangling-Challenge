@@ -3,6 +3,8 @@ const formatContent = require('./formatContent')
 
 module.exports = async () =>  {
     
+    console.log('Reading from wikipedia...')
+    
     const url = 'https://en.wikipedia.org/wiki/Road_safety_in_Europe'
     const browser = await puppet.launch();
     const page = await browser.newPage()
@@ -29,6 +31,8 @@ module.exports = async () =>  {
     })
 
     await browser.close()
+
+    console.log('Formatting...')
     
     content = content.filter(value => value.length === header[0].length)
     
