@@ -23,7 +23,21 @@ module.exports = (arrayContent) => {
             const subArrayContent = arrayContent[i]
             for (const key in indexTitle) {
                 const index = indexTitle[key]
-                dictContent[key] = subArrayContent[index] ?? '2018'
+                if (key === 'Year') {
+                    dictContent[key] = '2018'
+                } else {
+                    const value = subArrayContent[index]
+                        .replace('†a', '')
+                        .replace('†b', '')
+                        .replace('†c', '')
+                        .replace('†d', '')
+                        .replace('†e', '')
+                    if (key === 'Country') {
+                        dictContent[key] = value
+                    } else {
+                        dictContent[key] = value.replace(/,/g, "").replace('.', '')
+                    }
+                }
             }
             newArrayContent.push(dictContent)
         }

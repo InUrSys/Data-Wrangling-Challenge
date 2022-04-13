@@ -1,51 +1,201 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <script type="text/javascript">
-        function Upload() {
-            var fileUpload = document.getElementById("fileUpload");
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-            if (regex.test(fileUpload.value.toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        var table = document.createElement("table");
-                        var rows = e.target.result.split("\n");
-                        for (var i = 0; i < rows.length; i++) {
-                            var cells = rows[i].split(",");
-                            if (cells.length > 1) {
-                                var row = table.insertRow(-1);
-                                for (var j = 0; j < cells.length; j++) {
-                                    var cell = row.insertCell(-1);
-                                    cell.innerHTML = cells[j];
-                                }
-                            }
-                        }
-                        var dvCSV = document.getElementById("dvCSV");
-                        dvCSV.innerHTML = "";
-                        dvCSV.appendChild(table);
-                    }
-                    reader.readAsText(fileUpload.files[0]);
-                } else {
-                    alert("This browser does not support HTML5.");
-                }
-            } else {
-                alert("Please upload a valid CSV file.");
-            }
-        }
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
     </script>
-    
-    
+
+    <script type="text/javascript" >
+        let csvData = []
+
+        async function readCsv() {
+            const csvFilePath = "../data/Road_safety_in_Europe.csv"
+            await fetch(csvFilePath)
+                .then(res => res.text())
+                .then(text => {
+                    const data = text.split(',')
+                    let count = 0
+                    let tempList = []
+                    for (let i = 0; i < data.length ; i++) {
+                        count += 1;
+                        // do
+                        
+                        if (count === 9) {
+                            
+                        }
+                    }
+                    
+                })
+        }
+        
+        // const csvFile = document.getElementById("fileUpload");
+        // function readCSV() {
+        //     const input = csvFile.files[0];
+        //     const reader = new FileReader();
+        //     reader.onload = (e) => {
+        //         const text = e.target.result;
+        //         document.write(text)
+        //         console.log(text)
+        //     };
+        //     reader.readAsText(input)
+        // }
+        
+        async function scatterData() {
+            await readCsv()
+            console.log(csvData)
+            console.log('HERE')
+            let xyValues = [
+                {x: 50, y: 7},
+                {x: 60, y: 8},
+                {x: 70, y: 8},
+                {x: 80, y: 9},
+                {x: 90, y: 9},
+                {x: 100, y: 9},
+                {x: 110, y: 10},
+                {x: 120, y: 11},
+                {x: 130, y: 14},
+                {x: 140, y: 14},
+                {x: 150, y: 15}
+            ];
+
+            return {
+                type: "scatter",
+                data: {
+                    datasets: [{
+                        pointRadius: 4,
+                        pointBackgroundColor: "rgb(0,0,255)",
+                        data: xyValues
+                    }]
+                },
+                options: {
+                    legend: {display: false},
+                    scales: {
+                        xAxes: [{ticks: {min: 40, max: 160}}],
+                        yAxes: [{ticks: {min: 6, max: 16}}],
+                    }
+                }
+            };
+        }
+        
+        new Chart("simpleChart", scatterData())
+    </script>
 </head>
 <body>
-<h1>No Body</h1>
-<input type="file" id="fileUpload" />
-<input type="button" id="upload" value="Upload" onclick="Upload()" />
-<hr />
-<div id="dvCSV">
+    <canvas id="simpleChart" style="width:100%;max-width:700px"></canvas>
+    
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Road Safety</title>
+    <link rel="stylesheet" href="charts.css">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js">
+    </script>
+
+    <script type="text/javascript" >
+        d3.csv("../data/Road_safety_in_Europe.csv")
+            .then(makeCharts);
+        
+        function makeCharts(roadSafety) {
+            console.log(roadSafety)
+            makeHorizontalBar(roadSafety)
+            makeBuble(roadSafety)
+        }
+
+        function makeHorizontalBar(roadSafety) {
+            var countryLabels = roadSafety
+                .filter(val => val.Country !== 'EU 28 Total')
+                .map(function(d) {return d.Country});
+            
+            var totalRoadDeaths = roadSafety
+                .filter(val => val.Country !== 'EU 28 Total')
+                .map(function(d) {
+                    return +d['Total road deaths']});
+
+            var colors = roadSafety
+                .filter(val => val.Country !== 'EU 28 Total')
+                .map(function(d) {
+                    return '#'+Math.floor(Math.random()*16777215).toString(16);});
+
+            var chart = new Chart('horizontalChartBar', {
+                type: "horizontalBar",
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    }
+                },
+                data: {
+                    labels: countryLabels,
+                    datasets: [
+                        {
+                            data: totalRoadDeaths,
+                            backgroundColor: colors
+                        }
+                    ]
+                }
+            });
+        }
+
+
+        function makeBuble(roadSafety) {
+            var countryLabels = roadSafety
+                .filter(val => val.Country !== 'EU 28 Total')
+                .map(function(d) {return d.Country});
+            
+            var totalRoadData = roadSafety
+                .filter(val => val.Country !== 'EU 28 Total')
+                .map(function(d) {
+                    var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+                    console.log(randomColor)
+                    return {
+                    label: d.Country ,
+                    data: [{y:d['Population density'], x:d['Vehicle ownership'], r:d['Road deaths per Million Inhabitants']/2}],
+                    borderColor: randomColor,
+                    backgroundColor: randomColor,
+                }});
+            
+            console.log(totalRoadData)
+            
+            var bubble = new Chart('bubbleChart', {
+                type: "bubble",
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    }
+                },
+                data: {
+                    labels: countryLabels,
+                    datasets: totalRoadData
+                }
+            });
+        }
+        
+    </script>
+</head>
+<body>
+
+<div class="title">Total number of road deaths on 2018 per country</div>
+<div class="chart-wrapper">
+    <canvas id="horizontalChartBar" style="width:100%;"></canvas>
 </div>
+
+<div class="title">X: Vehicle ownership - Y: Population density - R: Road deaths per Million Inhabitants/2 </div>
+<div class="chart-wrapper">
+    <canvas id="bubbleChart" style="width:100%;"></canvas>
+</div>
+
 </body>
 </html>
