@@ -1,0 +1,68 @@
+{
+  "profile": "tabular-data-package",
+  "resources": [
+    {
+      "name": "resource1",
+      "path": "Road_safety_in_Europe.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "name": "Country",
+            "type": "string",
+            "format": "default"
+          },
+          {
+            "name": "Year",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Area",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Population",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "GDP per capita",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Population density",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Vehicle ownership",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Total road deaths",
+            "type": "integer",
+            "format": "default"
+          },
+          {
+            "name": "Road deaths per Million Inhabitants",
+            "type": "integer",
+            "format": "default"
+          }
+        ]
+      }
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Chernomirdin Da Costa Macuvele",
+      "role": "author"
+    }
+  ],
+  "name": "datapackage",
+  "homepage": "https://en.wikipedia.org/wiki/Road_safety_in_Europe",
+  "title": "European Union Road Safety Facts and Figures"
+}
